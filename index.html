@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        overflow-x: hidden;
+      }
+      .success {
+        border: 2px solid green !important;
+        width: 100% !important;
+      }
+
+      .failed {
+        width: 100% !important;
+        border: 2px solid red !important;
+      }
+      i {
+        font-size: 20px;
+      }
+      body {
+        min-width: 100vw;
+        min-height: 90vh;
+        background-color: blanchedalmond;
+      }
+      .mainContainer {
+        background-color: aliceblue;
+        padding: 25px 30px;
+        width: 80%;
+        margin: 4vw auto;
+        display: flex;
+      }
+      .mainInnerContainer {
+        width: 100%;
+        gap: 40px;
+      }
+      .inputValue {
+        justify-content: center;
+        display: flex;
+        width: 96%;
+        gap: 40px;
+        margin: 0 auto;
+        margin-bottom: 20px;
+      }
+      input {
+        border: 1px solid black;
+        outline: none;
+        border-radius: 15px;
+        padding: 12px 25px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      button {
+        font-size: 16px;
+        display: flex;
+        justify-content: center;
+        cursor: pointer;
+        padding: 11px 36px;
+        border-radius: 14px;
+        border: 1px solid black;
+        outline: none;
+      }
+
+      .valuelists {
+        margin: 0 auto;
+        width: 90%;
+        background-color: white;
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .value-list {
+        display: flex;
+        margin: 5px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        width: 100%;
+        justify-content: space-around;
+        align-items: center;
+        cursor: pointer;
+      }
+    </style>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div class="mainContainer">
+      <div class="mainInnerContainer">
+        <div class="inputValue">
+          <input
+            type="text"
+            id="name"
+            onkeypress="validateform(event)"
+            placeholder="Enter your name here"
+            autocomplete="off"
+          />
+          <input
+            type="text"
+            id="collage"
+            onkeypress="validateform(event)"
+            placeholder="Your University"
+            autocomplete="off"
+          />
+          <input
+            type="tel"
+            id="rollnumber"
+            onkeypress="validateform(event)"
+            placeholder="Your Roll Number"
+            autocomplete="off"
+          />
+          <input
+            type="tel"
+            id="age"
+            onkeypress="validateform(event)"
+            placeholder="Your Age"
+            autocomplete="off"
+          />
+          <button id="clickbtn">click</button>
+        </div>
+        <div class="valuelists"></div>
+      </div>
+    </div>
+
+    <script>
+      let itemCount = 0;
+      function handleClick() {
+        if (validateInputs()) {
+          const username = document.getElementById("name").value;
+          const collage = document.getElementById("collage").value;
+          const rollnumber = document.getElementById("rollnumber").value;
+          const age = document.getElementById("age").value;
+
+          const valueListContainer = document.querySelector(".valuelists"); //an empty div in which dynamic data is feed
+          const newValueList = document.createElement("div");
+          newValueList.classList.add("value-list");
+          itemCount++;
+
+          newValueList.innerHTML = `
+            <p> ${itemCount} </p>
+            <p> Name: ${username} </p>
+            <p> University: ${collage} </p>
+            <p> Roll Number: ${rollnumber} </p>
+            <p> Age: ${age} </p>
+           <i class="fa-regular fa-circle-xmark" style="color: #c74848;"></i>
+      `;
+
+          // for delete div element  when clicked
+          newValueList
+            .querySelector("i")
+            .addEventListener("click", function () {
+              valueListContainer.removeChild(newValueList);
+              updateIndexValues();
+            });
+          valueListContainer.appendChild(newValueList);
+          clearFields();
+        }
+      }
+
+      function clearFields() {
+        document.getElementById("name").value = "";
+        document.getElementById("collage").value = "";
+        document.getElementById("rollnumber").value = "";
+        document.getElementById("age").value = "";
+      }
+
+      function validateInputs() {
+        const username = document.getElementById("name").value;
+        const collage = document.getElementById("collage").value;
+        const rollnumber = document.getElementById("rollnumber").value;
+        const age = document.getElementById("age").value;
+
+        if (
+          username.trim() === "" ||
+          collage.trim() === "" ||
+          rollnumber.trim() === "" ||
+          age.trim() === ""
+        ) {
+          alert("Please fill in all fields.");
+          return false;
+        }
+
+        return true;
+      }
+
+      function updateIndexValues() {
+        const valueLists = document.querySelectorAll(".value-list");
+        console.log(valueLists);
+        itemCount = 0;
+        valueLists.forEach((list, index) => {
+          list.querySelector("p:first-child").innerText = ++itemCount;
+        });
+      }
+
+      //function to check the user input onkeypress
+      function validateform(event) {
+        const text = /[^a-zA-Z\s]+/;
+        // /^[a-zA-Z ]+$/ for avoiding spaces
+        const number = /[^0-9]+/;
+
+        const inputValue = event.key;
+
+        const inputId = event.target.id;
+
+        switch (inputId) {
+          case "name":
+            if (text.test(inputValue)) {
+              event.preventDefault();
+            }
+            break;
+
+          case "collage":
+            if (text.test(inputValue)) {
+              event.preventDefault();
+            }
+            break;
+
+          case "rollnumber":
+            if (number.test(inputValue)) {
+              event.preventDefault();
+            }
+            break;
+
+          case "age":
+            if (number.test(inputValue)) {
+              event.preventDefault();
+            }
+          default:
+            break;
+        }
+      }
+
+      document
+        .getElementById("clickbtn")
+        .addEventListener("click", handleClick);
+    </script>
+  </body>
+</html>
